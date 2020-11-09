@@ -1,0 +1,16 @@
+CREATE DATABASE `apichat`;
+
+USE apichat;
+
+CREATE TABLE `users`
+(
+`id` INT NOT NULL AUTO_INCREMENT,
+`name` VARCHAR
+(80) NOT NULL,
+`email` VARCHAR
+(150) NOT NULL,
+`password` VARCHAR
+(80) NOT NULL,
+PRIMARY KEY
+(`id`)
+);
