@@ -1,20 +1,37 @@
 const db = require("../config/db");
 
 class UsersModel {
-  static find(callback) {
+  static findAllWithoutOne(where, callback) {
     db.query(
-      "SELECT id, name, email, password FROM users ORDER BY id ASC",
+      "SELECT id, name, email FROM users WHERE id <> ? ORDER BY name ASC",
+      [where, where],
+      callback
+    );
+  }
+
+  static findAllBy(where, callback) {
+    db.query(
+      "SELECT DISTINCT users.id, users.name, users.email FROM messages JOIN users ON users.id IN (messages.sender_id, messages.receiver_id) WHERE ? IN (messages.sender_id, messages.receiver_id) AND users.id <> ? GROUP BY users.id ORDER BY users.name ASC ",
+      [where, where],
       callback
     );
   }
 
   static findBy(where, callback) {
+    db.query(
+      "SELECT id, name, email FROM users WHERE name = ? OR email = ?",
+      where,
+      callback
+    );
+  }
+
+  static findById(where, callback) {
     db.query("SELECT id, name, email FROM users WHERE ?", where, callback);
   }
 
   static findByLogin(body, callback) {
     db.query(
-      "SELECT id, name, email FROM users WHERE name = ? AND password = ?",
+      "SELECT id, name, email FROM users WHERE email = ? AND password = ?",
       body,
       callback
     );

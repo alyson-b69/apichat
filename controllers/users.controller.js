@@ -1,12 +1,20 @@
 const UsersModel = require("../models/users.model");
 const { validationResult } = require("express-validator");
 const { generatePassword } = require("../lib/utils");
-const dotenv = require("dotenv").config();
-const jwt = require("jsonwebtoken");
+const { JWTGenerate } = require("../lib/JWT");
 
 class UsersController {
   static getAll(req, res) {
-    UsersModel.find((err, results) => {
+    UsersModel.findAllWithoutOne([req.query.userId], (err, results) => {
+      if (err) {
+        res.status(500).send(err);
+      }
+      res.send(results);
+    });
+  }
+
+  static getAllWithMessages(req, res) {
+    UsersModel.findAllBy([req.query.userId], (err, results) => {
       if (err) {
         res.status(500).send(err);
       }
@@ -15,7 +23,7 @@ class UsersController {
   }
 
   static getOne(req, res) {
-    UsersModel.findBy({ id: parseInt(req.params.id) }, (err, results) => {
+    UsersModel.findById({ id: parseInt(req.params.id) }, (err, results) => {
       if (err) {
         res.status(500).send(err);
       }
@@ -25,15 +33,21 @@ class UsersController {
 
   static login(req, res) {
     UsersModel.findByLogin(
-      [req.body.name, generatePassword(req.body.password)],
+      [req.body.email, generatePassword(req.body.password)],
       (err, results) => {
         if (err) {
           res.status(500).send(err);
         } else {
           if (results[0] !== undefined) {
-            const name = req.body.name;
-            let token = jwt.sign({ name }, process.env.JWT_KEY);
-            res.status(200).send({ token });
+            const id = results[0].id;
+            const name = results[0].name;
+            const email = results[0].email;
+            let token = JWTGenerate(
+              req,
+              JSON.parse(JSON.stringify(results[0])),
+              60
+            );
+            res.status(200).send({ token, id: id, email: email, name: name });
           } else {
             res.sendStatus(401);
           }
@@ -42,17 +56,42 @@ class UsersController {
     );
   }
 
+  static findAllBy(req, res) {
+    UsersModel.findBy([req.body.name, req.body.email], (err, result) => {
+      if (err) {
+        res.status(500).send(JSON.stringify({ err }));
+      } else {
+        res.status(200).send(result);
+      }
+    });
+  }
+
   static createOne(req, res) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.array() });
+      return res.status(422).json({ errors: errors });
     } else {
-      req.body.password = generatePassword(req.body.password);
-      UsersModel.create(req.body, (err, results) => {
+      UsersModel.findBy([req.body.name, req.body.email], (err, result) => {
         if (err) {
-          res.status(500).send(err);
+          res.status(500).send(JSON.stringify({ err }));
+        } else {
+          console.log("Result in findBy : ", result);
+          if (result[0] === undefined) {
+            req.body.password = generatePassword(req.body.password);
+            UsersModel.create(req.body, (err, results) => {
+              if (err) {
+                res.status(500).send(JSON.stringify({ err }));
+              }
+              res.status(201).json(`User added`);
+            });
+          } else {
+            res
+              .status(409)
+              .send(
+                JSON.stringify({ duplicate: "name or email already exist" })
+              );
+          }
         }
-        res.status(201).send(`User added with ID: ${results.insertId}`);
       });
     }
   }
@@ -65,9 +104,9 @@ class UsersController {
       req.body.password = generatePassword(req.body.password);
       UsersModel.updateBy(req.body, { id: req.params.id }, (err, results) => {
         if (err) {
-          res.status(500).send(err);
+          res.status(500).send(JSON.stringify({ err }));
         }
-        res.status(202).send(results);
+        res.status(202).json(results);
       });
     }
   }

@@ -6,11 +6,31 @@ CREATE TABLE `users`
 (
 `id` INT NOT NULL AUTO_INCREMENT,
 `name` VARCHAR
-(80) NOT NULL,
+(80) NOT NULL UNIQUE,
 `email` VARCHAR
-(150) NOT NULL,
+(150) NOT NULL UNIQUE,
 `password` VARCHAR
 (80) NOT NULL,
 PRIMARY KEY
 (`id`)
+);
+
+CREATE TABLE `messages`
+(
+`id` BIGINT NOT NULL AUTO_INCREMENT UNIQUE,
+`sender_id` INT NOT NULL,
+`receiver_id` INT NOT NULL,
+`message` VARCHAR
+(300) NOT NULL,
+`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+`is_read` TINYINT
+(1) NOT NULL DEFAULT 0, 
+PRIMARY KEY
+(`id`),
+FOREIGN KEY
+(`sender_id`) REFERENCES users
+(id),
+FOREIGN KEY
+(`receiver_id`) REFERENCES users
+(id)
 );
