@@ -4,7 +4,7 @@ const app = express();
 const server = require("http").createServer(app);
 const options = {
   cors: true,
-  origins: ["http://127.0.0.1:3000"],
+  origins: ["https://kitten-box.wild-dev.com"],
 };
 const io = require("socket.io")(server, options);
 
@@ -97,5 +97,5 @@ io.on("connection", (client) => {
 });
 
 server.listen(port, () => {
-  console.info(`Server listening on  : http://localhost:${port}`);
+  console.info(`Server listening on  : ${port}`);
 });
