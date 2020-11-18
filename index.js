@@ -4,11 +4,13 @@ const app = express();
 const server = require("http").createServer(app);
 const corsOptions = {
   origin: "https://kitten-box.wild-dev.com",
+  "Access-Control-Allow-Origin": "https://kitten-box.wild-dev.com",
 };
 const socketOptions = {
   cors: true,
   origins: ["https://kitten-box.wild-dev.com"],
 };
+
 const io = require("socket.io")(server, socketOptions);
 
 const cors = require("cors");
