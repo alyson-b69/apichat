@@ -1,17 +1,15 @@
 const dotenv = require("dotenv").config();
 const express = require("express");
 const app = express();
+const cors = require("cors");
+app.use(cors({ origin: "https://kitten-box.wild-dev.com" }));
+
 const server = require("http").createServer(app);
-const corsOptions = {
-  origin: "https://kitten-box.wild-dev.com",
-};
+
 const socketOptions = {
   cors: true,
   origins: ["https://kitten-box.wild-dev.com"],
 };
-
-const cors = require("cors");
-app.use(cors(corsOptions));
 
 const io = require("socket.io")(server, socketOptions);
 
