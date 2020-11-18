@@ -97,5 +97,5 @@ io.on("connection", (client) => {
 });
 
 server.listen(port, () => {
-  console.info(`Server listening on : http://localhost:${port}`);
+  console.info(`Server listening on  : http://localhost:${port}`);
 });

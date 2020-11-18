@@ -1,6 +1,6 @@
 # MY REACT CHAT API (BACK)
 
-To view it run, you need to fork and install my [react-chat-app](https://github.com/alyson-b69/react-chat-app)
+To view it run, you need to fork and install my [kitten-box-app](https://github.com/alyson-b69/kitten-box-app)
 
 ## Installation :
 
