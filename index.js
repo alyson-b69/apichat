@@ -2,11 +2,14 @@ const dotenv = require("dotenv").config();
 const express = require("express");
 const app = express();
 const server = require("http").createServer(app);
-const options = {
+const corsOptions = {
+  origin: "https://kitten-box.wild-dev.com",
+};
+const socketOptions = {
   cors: true,
   origins: ["https://kitten-box.wild-dev.com"],
 };
-const io = require("socket.io")(server, options);
+const io = require("socket.io")(server, socketOptions);
 
 const cors = require("cors");
 
@@ -19,7 +22,7 @@ const subscribe = require("./routes/subscribe.routes.js");
 const login = require("./routes/login.routes.js");
 const messages = require("./routes/messages.routes.js");
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
