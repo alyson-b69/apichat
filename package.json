@@ -10,7 +10,8 @@
     "api",
     "express",
     "socket.io",
-    "chat", "messenger"
+    "chat",
+    "messenger"
   ],
   "author": "Alyson B",
   "license": "ISC",
@@ -21,6 +22,7 @@
     "express-validator": "^6.6.1",
     "http": "0.0.1-security",
     "jsonwebtoken": "^8.5.1",
+    "mariadb": "^2.5.1",
     "md5": "^2.3.0",
     "socket.io": "^3.0.1"
   }
