@@ -25,7 +25,7 @@ const login = require("./routes/login.routes.js");
 const messages = require("./routes/messages.routes.js");
 
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "https://kitten-box.wild-dev.com");
+  res.header("Access-Control-Allow-Origin", "*");
   next();
 });
 
