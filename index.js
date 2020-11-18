@@ -2,7 +2,13 @@ const dotenv = require("dotenv").config();
 const express = require("express");
 const app = express();
 const cors = require("cors");
-app.use(cors({ origin: "https://kitten-box.wild-dev.com" }));
+app.use(
+  cors({
+    "Access-Control-Allow-Origin": "https://kitten-box.wild-dev.com",
+    "Access-Control-Allow-Headers":
+      "Origin, X-Requested-With, Content-Type, Accept",
+  })
+);
 
 const server = require("http").createServer(app);
 
