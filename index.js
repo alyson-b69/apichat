@@ -2,18 +2,18 @@ const dotenv = require("dotenv").config();
 const express = require("express");
 const app = express();
 const server = require("http").createServer(app);
-// const corsOptions = {
-//   origin: "https://kitten-box.wild-dev.com",
-//   "Access-Control-Allow-Origin": "https://kitten-box.wild-dev.com",
-// };
+const corsOptions = {
+  origin: "https://kitten-box.wild-dev.com",
+};
 const socketOptions = {
   cors: true,
   origins: ["https://kitten-box.wild-dev.com"],
 };
 
-const io = require("socket.io")(server, socketOptions);
+const cors = require("cors");
+app.use(cors(corsOptions));
 
-//const cors = require("cors");
+const io = require("socket.io")(server, socketOptions);
 
 const port = process.env.HTTP_PORT;
 const bodyParser = require("body-parser");
@@ -24,12 +24,6 @@ const subscribe = require("./routes/subscribe.routes.js");
 const login = require("./routes/login.routes.js");
 const messages = require("./routes/messages.routes.js");
 
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  next();
-});
-
-// app.use(cors(corsOptions));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
