@@ -5,7 +5,6 @@ const cors = require("cors");
 app.use(cors());
 
 const server = require("http").createServer(app);
-s;
 
 const socketOptions = {
   cors: true,
